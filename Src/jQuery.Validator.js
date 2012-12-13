@@ -38,6 +38,7 @@
         returnObj.valid = allValid;
         returnObj.validInputs = [];
         returnObj.invalidInputs = [];
+        returnObj.messages = [];
 
         // WebKit Bugfix for text selection
         var onMouseUp = function (e) {
@@ -84,8 +85,8 @@
 
             
 
-            // Should we validate this field? (the required check is for legacy purposes.)
-            if ((data.required) || (data.validate)) {
+            // Should we validate this field?
+            if ((config.required) || (data.required) || (data.validate)) {
                 // Create an Invalid Input object
                 var invalidObject = { messages: [] },
 
@@ -272,6 +273,9 @@
                     invalidObject.elem = $this;
                     returnObj.invalidInputs.push(invalidObject);
 
+                    // Aggregate all error messages to a single collection
+                    returnObj.messages = returnObj.messages.concat(invalidObject.messages);
+                    
                     // Set the text of the field to the error message if we're using inline errors,
                     // and if this field is not excluded from using inline errors
                     if (inlineErrors && !data.showing_error && !$this.is(config.noInlineErrors)) {
